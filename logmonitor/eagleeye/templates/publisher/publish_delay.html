@@ -1,0 +1,97 @@
+{% extends "publisher/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <div class="boxCustomer search">
+            <select id="s_customer" class="hyjack" autocomplete="off">
+                <option value="0">请选择客户</option>
+                {% for c in customers %}
+                    <option value="{{ c }}">{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div id='summary' class='drop-shadow curved curved-vt-2'>
+        <div>
+            <p class='title'>监控客户数</p>
+            <p class='value'>{{ customers|length }}</p>
+        </div>
+        <div>
+            <p class='title'>上地延迟</p>
+            <p class='value'>{{ storage3_delay }}</p>
+        </div>
+        <div>
+            <p class='title'>兆维延迟</p>
+            <p class='value'>{{ storage2_delay }}</p>
+        </div>"
+    </div>
+    <div class='clear'></div>
+    <div id="charts">
+        <div id="chart-publish-delay"></div>
+    </div>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+    $('#s_customer').hyjack_select({
+        ddImage: '/static/images/arrow_down.png',
+        ddCancel: '/static/images/cancel.png',
+        emptyMessage: 'No item'
+    });
+    $('div.boxCustomer div.hjsel_container').css("width", "130px");
+    $('div.boxCustomer div div input[type="text"]').css("width", "96px");
+
+    $('#submit').click(function() {
+        var customer = $('#s_customer option:selected').val();
+        var day = $('#beginDate').val();
+
+        var args = {"beginDate": day, "customer": customer};
+        if (customer == "0") {
+            $.ajax({
+                type: "GET",
+                url: "/publisher/publishdelay/?beginDate="+day,
+                success: function(data) {
+                    $("#contents").html(data);
+                }
+            });
+        }
+        else {
+            $.getJSON("/publisher/publishdelay/summary/",
+                args,
+                function(data) {
+                    $('div#summary').remove();
+                    var html = "<div id='summary' class='drop-shadow curved curved-vt-2'>"
+                                  +"<div style='width: 50%;'><p class='title'>上地延迟</p>"
+                                    +"<p class='value'>"+data["storage3_delay"]+"</p>"
+                                  +"</div>"
+                                  +"<div style='width: 50%;'><p class='title'>兆维延迟</p>"
+                                    +"<p class='value'>"+data["storage2_delay"]+"</p>"
+                                  +"</div>"
+                               +"</div>";
+                    $('div.middle-div').prepend(html);
+                }
+            );
+
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSLine.swf",
+            "cpd", "100%", "380", "0", "1");
+            var url = "/publisher/publishdelay/data/";
+            url += "?beginDate="+day;
+            url += "%26customer="+customer;
+            chart.setJSONUrl(url);
+            chart.render("chart-publish-delay");
+        }
+    });
+});
+</script>
+{% endblock %}

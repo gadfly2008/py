@@ -1,0 +1,6 @@
+CCN-BJ-5-5I9 61.135.207.20 24622 root exploration#Logcenter
+CCN-BJ-5-5IJ 61.135.207.20 23622 root exploration#Logcenter
+BGP-BJ-2-5A1 223.202.17.198 22 root Blueit_s_BJ
+BGP-BJ-2-5A2 223.202.17.199 22 root Blueit_s_BJ
+CNC-JN-P-571 60.217.249.127 22 root exploration#Logcenter
+CNC-JN-P-572 60.217.249.126 22 root exploration#Logcenter

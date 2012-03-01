@@ -1,0 +1,45 @@
+.loadmask {
+    z-index: 100;
+    position: absolute;
+    top:0;
+    left:0;
+    -moz-opacity: 0.5;
+    opacity: .50;
+    filter: alpha(opacity=50);
+    background-color: #CCC;
+    width: 100%;
+    height: 100%;
+    zoom: 1;
+}
+.loadmask-msg {
+    z-index: 20001;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid #f06b00;
+    background: #ff7425;
+    padding: 2px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+.loadmask-msg div {
+    padding: 5px 10px 5px 35px;
+    background: #fefef8 url("../images/loading.gif") no-repeat 8px 7px;
+    line-height: 18px;
+    border: 1px solid #ffb476;
+    color: #383a36;
+    font: 18px Arial,Helvetica,'lucida grande',tahoma,'bitstream vera sans',sans-serif;
+    cursor: wait;
+    letter-spacing: 0.8px;
+    text-shadow: 3px 3px 5px #a1a59d;
+}
+.masked {
+    overflow: hidden !important;
+}
+.masked-relative {
+    position: relative !important;
+}
+.masked-hidden {
+    visibility: hidden !important;
+}

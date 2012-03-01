@@ -1,0 +1,174 @@
+{% extends "nla/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <input type="hidden" id="nla_device_value" value="0">
+        <input type="hidden" id="fc_device_value" value="0">
+        <div class="search">
+            <input id="nla_device" class="text" type="text"
+                   value="NLA查询" onfocus="searchFocusSet(this,'NLA查询')" onblur="searchBlurSet(this,'NLA查询')"
+                   autocomplete="off" role="textbox" aria-autocomplete="list" aira-haspopup="true">
+        </div>
+        <div class="search">
+            <input id="fc_device" class="text" type="text"
+                   value="FC查询" onfocus="searchFocusSet(this,'FC查询')" onblur="searchBlurSet(this,'FC查询')"
+                   autocomplete="off" role="textbox" aria-autocomplete="list" aira-haspopup="true">
+        </div>
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div class='clear'></div>
+    <div id="charts">
+        <div id="chart-nla-fc"></div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+
+    $('div.search input.text').addClass('search_font_style');
+    $('#nla_device').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: "/rcms/nla/devices/",
+                dataType: "json",
+                data: {
+                    name: request.term
+                },
+                success: function(data) {
+                    response($.map(data.nlas, function(item) {
+                        return {
+                            label: item.name,
+                            value: item.sn
+                        }
+                    }));
+                }
+            });
+        },
+        minLength: 5,
+        focus: function(event, ui) {
+            $('#nla_device').val(ui.item.label);
+            return false;
+        },
+        select: function(event, ui) {
+            $('#nla_device').val(ui.item.label);
+            $('#nla_device_value').val(ui.item.value);
+            return false;
+        },
+        change: function(event, ui) {
+            if (ui.item) {
+                $('#nla_device_value').val(ui.item.value);
+            }
+            else {
+                $('#nla_device_value').val("0");
+            }
+            return false;
+        }
+    });
+
+    $('#fc_device').autocomplete({
+          source: function(request, response) {
+              $.ajax({
+                 url: "/rcms/fc/devices/",
+                 dataType: "json",
+                 data: {
+                     name: request.term
+                 },
+                 success: function(data) {
+                     response($.map(data.fcs, function(item) {
+                         return {
+                             label: item.name,
+                             value: item.sn
+                         }
+                     }));
+                 }
+             });
+          },
+          minLength: 5,
+         focus: function(event, ui) {
+             $('#fc_device').val(ui.item.label);
+             return false;
+         },
+         select: function(event, ui) {
+             $('#fc_device').val(ui.item.label);
+             $('#fc_device_value').val(ui.item.value);
+             return false;
+         },
+         change: function(event, ui) {
+             if (ui.item) {
+                 $('#fc_device_value').val(ui.item.value);
+             }
+             else {
+                 $('#fc_device_value').val("0");
+             }
+             return false;
+         }
+    });
+
+    $('#submit').click(function() {
+        var nla = $('#nla_device_value').val();
+        var fc = $('#fc_device_value').val();
+        var day = $('#beginDate').val();
+        if (nla == '0' && fc == '0') {
+            return;
+        }
+        else if (isNaN(parseInt(nla.substr(0,1))) && $('#nla_device_value').val() != 'NLA查询') {
+            return;
+        }
+        else if (isNaN(parseInt(fc.substr(0,1))) && $('#fc_device_value').val() != 'FC查询') {
+            return;
+        }
+        var args = {"beginDate": day, "nla": nla, "fc": fc};
+        var html = "";
+        $.getJSON("/nla/nlafc/summary/",
+            args,
+            function(data) {
+                $('div#summary').remove();
+                if (nla != '0' && fc == '0') {
+                    html += "<div id='summary' class='drop-shadow curved curved-vt-2'>"
+                              +"<div><p class='title'>FC设备</p>"
+                                +"<p class='value'>"+data["count"]+"</p>"
+                              +"</div>"
+                              +"<div><p class='title'>日志文件数量</p>"
+                                +"<p class='value'>"+data["fcount"]+"</p>"
+                              +"</div>"
+                              +"<div><p class='title'>日志文件大小</p>"
+                                +"<p class='value'>"+data["fsize"]+"</p>"
+                              +"</div>"
+                            +"</div>";
+                }
+                else if (nla == '0' && fc != '0') {
+                    html += "<div id='summary' class='drop-shadow curved curved-vt-2'>"
+                              +"<div><p class='title'>NLA设备</p>"
+                                +"<p class='value'>"+data["count"]+"</p>"
+                              +"</div>"
+                              +"<div><p class='title'>日志文件数量</p>"
+                                +"<p class='value'>"+data["fcount"]+"</p>"
+                              +"</div>"
+                              +"<div><p class='title'>日志文件大小</p>"
+                                +"<p class='value'>"+data["fsize"]+"</p>"
+                              +"</div>"
+                            +"</div>";
+                }
+                $('div.middle-div').prepend(html);
+            }
+        );
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var chart = new FusionCharts("/static/swf/ScrollCombiDY2D.swf",
+        "cnf", "100%", "360", "0", "1");
+        var url = "/nla/nlafc/data/";
+        url += "?beginDate="+day;
+        url += "%26nla="+nla+"%26fc="+fc;
+        chart.setJSONUrl(url);
+        chart.render("chart-nla-fc");
+    });
+});
+</script>
+{% endblock %}

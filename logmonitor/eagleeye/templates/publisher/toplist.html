@@ -1,0 +1,60 @@
+{% extends "publisher/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div id="charts">
+        <div id="chart-top-user" class="left-div" style="width: 48%;"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSBar2D.swf",
+            "ctu", "100%", "1400", "0", "1");
+            var url = "/publisher/toplist/user/data/";
+            url += "?beginDate={{beginDate}}";
+            chart.setJSONUrl(url);
+            chart.render("chart-top-user");
+        </script>
+        <div id="chart-top-channel" class="right-div" style="width: 48%;"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSBar2D.swf",
+            "ctc", "100%", "1400", "0", "1");
+            var url = "/publisher/toplist/channel/data/";
+            url += "?beginDate={{beginDate}}";
+            chart.setJSONUrl(url);
+            chart.render("chart-top-channel");
+        </script>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+    $('#submit').click(function() {
+        var day = $('#beginDate').val();
+
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var ctu = FusionCharts("ctu");
+        var url1 = "/publisher/toplist/user/data/";
+        url1 += "?beginDate="+day;
+        ctu.setJSONUrl(url1);
+
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var ctc = FusionCharts("ctc");
+        var url2 = "/publisher/toplist/channel/data/";
+        url2 += "?beginDate="+day;
+        ctc.setJSONUrl(url2);
+    });
+})
+</script>
+{% endblock %}

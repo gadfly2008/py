@@ -1,0 +1,227 @@
+{% extends "nla/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <input type="hidden" id="nla_device_value" value="NLA查询">
+        <div class="search">
+            <input id="nla_device" class="text" type="text"
+                   value="NLA查询" onfocus="searchFocusSet(this,'NLA查询')" onblur="searchBlurSet(this,'NLA查询')"
+                   autocomplete="off" role="textbox" aria-autocomplete="list" aira-haspopup="true">
+        </div>
+        <div class="boxFtpStatus search">
+            <select id="s_ftp_status" class="hyjack" autocomplete="off">
+                <option value="-1">请选择FTP状态</option>
+                <option value="running">Running</option>
+                <option value="stop">Stop</option>
+            </select>
+        </div>
+        <div class="search submit">
+            <input type="hidden" id="randint" value="1"/>
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('div.search input.text').addClass('search_font_style');
+    $('#nla_device').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: "/rcms/nla/devices/",
+                dataType: "json",
+                data: {
+                    name: request.term
+                },
+                success: function(data) {
+                    response($.map(data.nlas, function(item) {
+                        return {
+                            label: item.name,
+                            value: item.name
+                        }
+                    }));
+                }
+            });
+        },
+        minLength: 5,
+        select: function(event, ui) {
+            $('#nla_device_value').val(this.value);
+        },
+        change: function(event, ui) {
+            $('#nla_device_value').val(this.value);
+        }
+    });
+
+    $('#s_ftp_status').hyjack_select({
+        ddImage: '/static/images/arrow_down.png',
+        ddCancel: '/static/images/cancel.png',
+        emptyMessage: 'No item'
+    });
+    $('div.boxFtpStatus div.hjsel_container').css("width", "130px");
+    $('div.boxFtpStatus div div input[type="text"]').css("width", "96px");
+
+    $("#contents").mask("Loading......");
+    $('input#randint').val(String(Math.floor(Math.random()*1000+1)));
+    create_table(init_args());
+
+    $('#submit').click(function() {
+        create_table(get_args());
+    });
+});
+
+function init_args() {
+    var device = $('#nla_device_value').val();
+    var ftp = $('#s_ftp_status option:selected').val();
+    var randint = String(Math.floor(Math.random()*1000+1));
+
+    return {"device": device, "ftp": ftp, "randint": randint};
+}
+
+function get_args() {
+    var device = $('#nla_device_value').val();
+    var ftp = $('#s_ftp_status option:selected').val();
+    var randint = $('input#randint').val();
+
+    return {"device": device, "ftp": ftp, "randint": randint};
+}
+
+function create_table(args) {
+    $('div#summary').remove();
+    $('div.div-table').remove();
+    $.getJSON("/nla/monitor/data/",
+        args,
+        function(data) {
+            var html = "<div id='summary' class='drop-shadow curved curved-vt-2'>"
+                            +"<div style='width: 25%;'><p class='title'>红色警告</p>"
+                                +"<p class='value'>"+data["warning"]+"</p>"
+                            +"</div>"
+                            +"<div style='width: 25%;'><p class='title'>橙色预警</p>"
+                                +"<p class='value'>"+data["forewarning"]+"</p>"
+                            +"</div>"
+                            +"<div style='width: 25%;'><p class='title'>黄色注意</p>"
+                                +"<p class='value'>"+data["notice"]+"</p>"
+                            +"</div>"
+                            +"<div style='width: 25%;'><p class='title'>白色正常</p>"
+                                +"<p class='value'>"+data["normal"]+"</p>"
+                            +"</div>"
+                        +"</div>"
+                        +"<div class='clear'></div>";
+            html += "<div class='div-table'>";
+            html += "<div class='div-head'>"
+                        +"<div class='div-th' style='width: 10%'>设备名字</div>"
+                        +"<div class='div-th' style='width: 6%'>FTP</div>"
+                        +"<div class='div-th' style='width: 6%'>Health</div>"
+                        +"<div class='div-th' style='width: 40%'>目录监控</div>"
+                        +"<div class='div-th' style='width: 18%'>分区监控</div>"
+                        +"<div class='div-th' style='width: 15%'>最后更新时间</div>"
+                        +"<div class='div-th' style='width: 5%'>详细</div>"
+                        +"<div class='clear'></div>"
+                    +"</div>";
+            $.each(data["data"], function(index, entry) {
+                html += "<div class='div-tr level"+entry["level"]+"'>";
+                html += "<div class='div-td' style='width: 10%'><a class='delete'>"+entry["hostname"]+"</a></div>";
+                html += "<div class='div-td' style='width: 6%'>"+entry["ftp"]+"</div>";
+                html += "<div class='div-td' style='width: 6%'>"+entry["health"]+"</div>";
+                html += "<div class='div-td dir-td' style='width: 40%'>"
+                            +"<div>"
+                                +"<span class='td-name'>"+entry["master_dir"]["name"]+":</span>"
+                                +"<span class='td-value'>"+entry["master_dir"]["size"]+"</span>"
+                                +"<span class='td-value-split'>|</span>"
+                                +"<span class='td-value'>"+entry["master_dir"]["count"]+"</span>"
+                                +"<span class='dir-expend button standby' style='margin-right: 12px;'></span>"
+                                +"<div class='clear'></div>"
+                            +"</div>";
+                $.each(entry["dirs"], function(index, dir) {
+                    html += "<div class='div-hide' id='dir-"+index+"'>"
+                                +"<span class='td-name'>"+dir["name"]+":</span><span class='td-value'>"+dir["size"]
+                                +"</span><span class='td-value-split'>|</span><span class='td-value'>"+dir["count"]+"</span>"
+                            +"</div><div class='clear'></div>";
+                });
+                html += "</div>";
+
+                html += "<div class='div-td block-td' style='width: 18%'>"
+                            +"<div><span class='td-name'>"+entry["master_block"]["name"]+":</span>"
+                                +"<span class='td-value td-value-end'>"+entry["master_block"]["used"]+"%</span>"
+                                +"<span class='block-expend button standby' style='margin-right: 8px;'></span>"
+                                +"<div class='clear'></div>"
+                            +"</div>";
+                $.each(entry["blocks"], function(index, block) {
+                    html += "<div class='div-hide' id='block-"+index+"'>"
+                                +"<span class='td-name'>"+block["name"]+":</span>"
+                                +"<span class='td-value td-value-end'>"+block["used"]+"%</span>"
+                            +"</div>";
+                });
+                html += "</div>";
+
+                html += "<div class='div-td' style='width: 15%'>"+entry["datetime"]+"</div>";
+                html += "<div class='div-td' style='width: 5%'><a class='detail' href='/nla/"+entry["hostname"]+"/performance/' alt='performance detail'></a></div>";
+                html += "</div><div class='clear'></div>";
+            });
+            html += "</div>";
+            $('div.middle-div').prepend(html);
+            bindAction();
+        }
+    );
+}
+
+function bindAction() {
+    $('div.div-td a.delete').click(function() {
+        var deviceName = $(this).text();
+        var parent = $(this).parent().parent();
+        if (confirm("确定要删除该设备 "+deviceName+" 吗?")) {
+            $.post("/nla/monitor/"+deviceName+"/delete/", function(data) {
+                parent.slideUp("slow", function() {
+                    parent.remove();
+                    var randint = Math.floor(Math.random()*1000+1);
+                    $('input#randint').val(String(randint));
+                });
+            });
+        }
+    });
+
+    $('span.dir-expend').toggle(
+        function() {
+            $(this).parent().parent().parent().find("div.dir-td div.div-hide").show("slow");
+            $(this).removeClass("standby");
+            $(this).addClass("shutdown");
+        },
+        function() {
+            $(this).parent().parent().parent().find("div.dir-td div.div-hide").hide("slow");
+            $(this).removeClass("shutdown");
+            $(this).addClass("standby");
+        }
+    );
+
+    $('span.block-expend').toggle(
+        function() {
+            $(this).parent().parent().parent().find("div.block-td div.div-hide").show("slow");
+            $(this).removeClass("standby");
+            $(this).addClass("shutdown");
+        },
+        function() {
+            $(this).parent().parent().parent().find("div.block-td div.div-hide").hide("slow");
+            $(this).removeClass("shutdown");
+            $(this).addClass("standby");
+        }
+    );
+
+    $('a.detail').fancybox({
+        'width': "900",
+        'height': "600",
+        'autoScale': true,
+        'centerOnScroll': true,
+        'padding': 28,
+        'margin': 48,
+        'scrolling': 'no',
+        'overlayOpacity': 0.4,
+        'overlayColor': "#979b8f",
+        'transitionIn': "elastic",
+        'transitionOut': "elastic",
+        'enableEscapeButton': true
+    });
+}
+</script>
+{% endblock %}

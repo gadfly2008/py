@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block contents %}
+<div id="container">
+    <div class="middle-div">
+        <div id="summary-index" class="drop-shadow curved curved-vt-2">
+            <div class="section">
+                <div class="section-top">
+                    <p class="title">{{ third }}</p>
+                </div>
+                <div class="section-bottom">
+                    <div>
+                        <p class="title">原始日志</p>
+                        <p class="value">{{ third_original }}</p>
+                    </div>
+                    <div>
+                        <p class="title">发布日志</p>
+                        <p class="value">{{ third_publish }}</p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-top">
+                    <p class="title">{{ second }}</p>
+                </div>
+                <div class="section-bottom">
+                    <div>
+                        <p class="title">原始日志</p>
+                        <p class="value">{{ second_original }}</p>
+                    </div>
+                    <div>
+                        <p class="title">发布日志</p>
+                        <p class="value">{{ second_publish }}</p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-top">
+                    <p class="title">{{ first }}</p>
+                </div>
+                <div class="section-bottom">
+                    <div>
+                        <p class="title">原始日志</p>
+                        <p class="value">{{ first_original }}</p>
+                    </div>
+                    <div>
+                        <p class="title">发布日志</p>
+                        <p class="value">{{ first_publish }}</p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        <div class='clear'></div>
+    </div>
+
+    <div class="bottom-div" id="introduction">
+        <div>
+            <section>
+                <h3>Analytics for maintenance</h3>
+                <p>
+                    日志系统博大精深，故事情节曲折，使得运维及研发的工程师都伤不起。EagleEye对日志系统各环节都进行了数据采集分析，对关键环节预警。运维及研发工程师可以对分析得到的结果进行研究，优化日志系统结构，提高性能，为新系统研发打好结实的基础。
+                </p>
+            </section>
+        </div>
+        <div>
+            <section>
+                <h3>Manage task for Hadoop</h3>
+                <p>
+                    管理Hadoop的任务，实时观察任务的运行状况。可以手动开启任务，停止任务，并对高优先级的任务进行插队执行。
+                </p>
+            </section>
+        </div>
+        <div>
+            <section>
+                <h3>Html5 and CSS3</h3>
+                <p>
+                    Html5让Flash可以在IOS设备上可以正常运行。CSS3的使用，可以大量减少Javascript和图片对Web性能的影响，让Web设计更简洁，有助于Web的性能提高。
+                </p>
+            </section>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+{% endblock %}

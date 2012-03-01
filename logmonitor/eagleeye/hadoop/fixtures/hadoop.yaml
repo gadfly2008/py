@@ -1,0 +1,119 @@
+- model: hadoop.ChannelJob
+  pk: 1
+  fields:
+    user_id: 10
+    user_name: root
+    channel_id: 20
+    channel_name: www.cc.com
+    priority: 2
+    source_path: /data/source/path/
+    source_fline: 4
+    source_fsize: 100
+    target_path: /data/target/path/
+    target_fline: 3
+    target_fsize: 200
+    job_id: 30
+    job_name: publish
+    status: 0
+    job_day: 2011-06-12 00:00:00
+    update_time: 2011-06-12 12:23:00
+    pub_mime_filter: images
+    pub_url_filter: img,txt
+    pub_way: http
+    pub_is_filter: true
+    pub_format_type: w3c
+    pub_ftp_ip: 1.1.1.1
+    pub_ftp_port: 21
+    pub_ftp_dir: /
+    pub_ftp_user: root
+    pub_ftp_passwd: root
+
+- model: hadoop.ChannelJob
+  pk: 2
+  fields:
+    user_id: 10
+    user_name: root
+    channel_id: 21
+    channel_name: www.cc.com1
+    priority: 1
+    source_path: /data/source/path/
+    source_fline: 4
+    source_fsize: 100
+    target_path: /data/target/path/
+    target_fline: 3
+    target_fsize: 200
+    job_id: 40
+    job_name: publish
+    status: 1
+    job_day: 2011-06-12 00:00:00
+    update_time: 2011-06-12 12:23:00
+    pub_mime_filter: images
+    pub_url_filter: img,txt
+    pub_way: http
+    pub_is_filter: true
+    pub_format_type: w3c
+    pub_ftp_ip: 1.1.1.1
+    pub_ftp_port: 21
+    pub_ftp_dir: /
+    pub_ftp_user: root
+    pub_ftp_passwd: root
+
+- model: hadoop.ChannelJob
+  pk: 3
+  fields:
+    user_id: 10
+    user_name: root
+    channel_id: 22
+    channel_name: www.cc.com2
+    priority: 2
+    source_path: /data/source/path/
+    source_fline: 4
+    source_fsize: 100
+    target_path: /data/target/path/
+    target_fline: 3
+    target_fsize: 200
+    job_id: 50
+    job_name: publish
+    status: 2
+    job_day: 2011-06-12 00:00:00
+    update_time: 2011-06-12 12:23:00
+    pub_mime_filter: images
+    pub_url_filter: img,txt
+    pub_way: http
+    pub_is_filter: true
+    pub_format_type: w3c
+    pub_ftp_ip: 1.1.1.1
+    pub_ftp_port: 21
+    pub_ftp_dir: /
+    pub_ftp_user: root
+    pub_ftp_passwd: root
+
+- model: hadoop.ChannelJob
+  pk: 4
+  fields:
+    user_id: 10
+    user_name: root
+    channel_id: 23
+    channel_name: www.cc.com3
+    priority: 3
+    source_path: /data/source/path/
+    source_fline: 4
+    source_fsize: 100
+    target_path: /data/target/path/
+    target_fline: 3
+    target_fsize: 200
+    job_id: 60
+    job_name: publish
+    status: 3
+    job_day: 2011-06-12 00:00:00
+    update_time: 2011-06-12 12:23:00
+    pub_mime_filter: images
+    pub_url_filter: img,txt
+    pub_way: http
+    pub_is_filter: true
+    pub_format_type: w3c
+    pub_ftp_ip: 1.1.1.1
+    pub_ftp_port: 21
+    pub_ftp_dir: /
+    pub_ftp_user: root
+    pub_ftp_passwd: root

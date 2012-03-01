@@ -1,0 +1,76 @@
+{% extends "publisher/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="middle-div">
+    <div id="charts">
+        <div id="chart-publish-year"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+
+            var chart = new FusionCharts("/static/swf/MSLine.swf",
+                                          "cpy", "100%", "340", "0", "1");
+            var url = "/publisher/publishyear/data/";
+            chart.setJSONUrl(url);
+            chart.render("chart-publish-year");
+        </script>
+        <br/>
+        <div id="chart-publish-total"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+
+            var chart1 = new FusionCharts("/static/swf/Column3D.swf",
+            "cpt", "100%", "340", "0", "1");
+            var url1 = "/publisher/publishtotal/data/";
+            url1 += "?beginDate={{ beginDate }}";
+            chart1.setJSONUrl(url1);
+            chart1.render("chart-publish-total");
+        </script>
+        <br/>
+        <div id="chart-publish-multi"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+
+            var chart2 = new FusionCharts("/static/swf/MSColumn3D.swf",
+            "cpm", "100%", "340", "0", "1");
+            var url2 = "/publisher/publishtotal/multi/data/";
+            url2 += "?beginDate={{ beginDate }}";
+            chart2.setJSONUrl(url2);
+            chart2.render("chart-publish-multi");
+        </script>
+    </div>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+    $('#submit').click(function() {
+        var day = $('#beginDate').val();
+
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var chart1 = new FusionCharts("/static/swf/Column3D.swf",
+        "cpt", "100%", "340", "0", "1");
+        var url1 = "/publisher/publishtotal/data/?beginDate="+day;
+        chart1.setJSONUrl(url1);
+        chart1.render("chart-publish-total");
+
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var chart2 = new FusionCharts("/static/swf/MSColumn3D.swf",
+        "cpm", "100%", "340", "0", "1");
+        var url2 = "/publisher/publishtotal/multi/data/?beginDate="+day;
+        chart2.setJSONUrl(url2);
+        chart2.render("chart-publish-multi");
+    });
+});
+</script>
+{% endblock %}

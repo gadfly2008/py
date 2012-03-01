@@ -1,0 +1,123 @@
+{% extends "refresh/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <input type="hidden" id="customer_value" value="0">
+        <div class="search">
+            <input id="customer" class="text" type="text"
+                   value="客户查询" onfocus="searchFocusSet(this,'客户查询')" onblur="searchBlurSet(this,'客户查询')"
+                   autocomplete="off" role="textbox" aria-autocomplete="list" aira-haspopup="true">
+        </div>
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div class="chart">
+        <div id="chart-refresh-top" class="chart"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSBar2D.swf",
+            "crt", "100%", "480", "0", "1");
+            chart.setJSONUrl("/refresh/detail/top/data/?beginDate={{ beginDate }}");
+            chart.render("chart-refresh-top");
+        </script>
+    </div>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+
+    $('div.search input.text').addClass('search_font_style');
+    $('#customer').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+               url: "/rcms/customers/",
+               dataType: "json",
+               data: {
+                   name: request.term
+               },
+               success: function(data) {
+                   response($.map(data.customers, function(item) {
+                       return {
+                           label: item.name,
+                           value: item.customerId
+                       }
+                   }));
+               }
+           });
+        },
+        minLength: 2,
+        focus: function(event, ui) {
+            $('#customer').val(ui.item.label);
+            return false;
+        },
+        select: function(event, ui) {
+            $('#customer').val(ui.item.label);
+            $('#customer_value').val(ui.item.label);
+            return false;
+        },
+        change: function(event, ui) {
+            if (ui.item) {
+                $('#customer_value').val(ui.item.label);
+            }
+            else {
+                $('#customer_value').val("0");
+            }
+            return false;
+        }
+    });
+    
+    $('#submit').click(function() {
+        var customer = $('#customer_value').val();
+        var day = $('#beginDate').val();
+        $('div.chart').remove();
+        $('div.middle-div').append("<div class='chart'></div>");
+
+        if (customer != "0") {
+            var html1 = "<div id='chart-refresh-total'></div>"
+                            +"<div style='height: 40px;'></div>"
+                       +"<div>"
+                       +"<div id='chart-channel-top' style='width: 45%; float: left;'></div>"
+                            +"<div id='chart-url-top' style='width: 45%; float: right;'></div>"
+                            +"<div class='clear'></div>"
+                       +"</div>";
+            $('div.chart').append(html1);
+
+            FusionCharts._fallbackJSChartWhenNoFlash();
+
+            var chart1 = new FusionCharts("/static/swf/Column3D.swf",
+            "crt", "100%", "360", "0", "1");
+            chart1.setJSONUrl("/refresh/detail/total/data/?beginDate="+day+"%26customer="+customer);
+            chart1.render("chart-refresh-total");
+
+            var char2 = new FusionCharts("/static/swf/MSBar2D.swf",
+            "cct", "100%", "460", "0", "1");
+            char2.setJSONUrl("/refresh/detail/channeltop/data/?beginDate="+day+"%26customer="+customer);
+            char2.render("chart-channel-top");
+
+            var chart3 = new FusionCharts("/static/swf/MSBar2D.swf",
+            "cut", "100%", "460", "0", "1");
+            chart3.setJSONUrl("/refresh/detail/urltop/data/?beginDate="+day+"%26customer="+customer);
+            chart3.render("chart-url-top");
+        }
+        else {
+            var html2 = "<div id='chart-refresh-top'></div>";
+            $('div.chart').append(html2);
+
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSBar2D.swf",
+            "crt", "100%", "480", "0", "1");
+            chart.setJSONUrl("/refresh/detail/top/data/?beginDate="+day);
+            chart.render("chart-refresh-top");
+        }
+    });
+});
+</script>
+{% endblock %}

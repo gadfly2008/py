@@ -1,0 +1,214 @@
+<div id="navigator">
+    <div id="menulist">
+        <ul>
+            <li class="menu-begin">
+                <a id="hadoop">Hadoop</a>
+            </li>
+            <li>
+                <a id="nla">NLA</a>
+            </li>
+            <li>
+                <a id="fc">FC</a>
+            </li>
+            <li>
+                <a id="logpulish">LogPublish</a>
+            </li>
+            <li>
+                <a id="lcer">LC</a>
+            </li>
+            <li>
+                <a id="refresh">Refresher</a>
+            </li>
+        </ul>
+    </div>
+    <div class="clear"></div>
+    <div id="menulist-sub">
+        <div id="hadoop-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="job-list">任务管理</a>
+                </li>
+                <li>
+                    <a id="hadoop-monitor">Hadoop监控</a>
+                </li>
+            </ul>
+        </div>
+        <div id="nla-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="nlamonitor">NLA监控</a>
+                </li>
+                <li>
+                    <a id="nla-statistic">NLA分析统计</a>
+                </li>
+                <li>
+                    <a id="nla-area">NLA区域统计</a>
+                </li>
+                <li>
+                    <a id="nla-fc">NLA/FC关系统计</a>
+                </li>
+                <li>
+                    <a id="channel-nla">频道原始日志统计</a>
+                </li>
+                <li>
+                    <a id="nla-toplist">NLA排行榜</a>
+                </li>
+                <li>
+                    <a id="channel-toplist">频道排行榜</a>
+                </li>
+            </ul>
+        </div>
+        <div id="fc-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="fc-original">FC原始日志统计</a>
+                </li>
+            </ul>
+        </div>
+        <div id="logpulish-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="daywarning">每日告警</a>
+                </li>
+                <li>
+                    <a id="publishtotal">全网日志发布趋势</a>
+                </li>
+                <li>
+                    <a id="publishdetail">日志发布详细</a>
+                </li>
+                <li>
+                    <a id="publishdelay">日志发布延迟</a>
+                </li>
+                <li>
+                    <a id="publish-toplist">日志发布排行榜</a>
+                </li>
+            </ul>
+        </div>
+        <div id="lc-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="lcblockmonitor">目录磁盘监控</a>
+                </li>
+            </ul>
+        </div>
+        <div id="refresh-submenu" class="submenulist">
+            <ul>
+                <li class="submenu-begin">
+                    <a id="refresh-summary">刷新概况</a>
+                </li>
+                <li>
+                    <a id="refresh-detail">刷新详细</a>
+                </li>
+                <li>
+                    <a id="refresh-statistic">刷新统计</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('div.submenulist').hide();
+        $('div#menulist ul li a').click(function() {
+            $('div#menulist ul li a').removeClass("menuactive");
+            $(this).addClass("menuactive");
+            var domId = $(this).attr("id");
+            $('div.submenulist').hide();
+            switch(domId) {
+                case 'hadoop':
+                    $('#hadoop-submenu').show("slow");
+                    break;
+                case 'nla':
+                    $('#nla-submenu').show("slow");
+                    break;
+                case 'fc':
+                    $('#fc-submenu').show("slow");
+                    break;
+                case 'logpulish':
+                    $('#logpulish-submenu').show("slow");
+                    break;
+                case 'lcer':
+                    $('#lc-submenu').show("slow");
+                    break;
+                case 'refresh':
+                    $('#refresh-submenu').show("slow");
+                    break;
+            }
+        });
+        $('div.submenulist ul li a').click(function() {
+            $('div.submenulist ul li a').removeClass("submenuactive");
+            $(this).addClass("submenuactive");
+            var domId = $(this).attr("id");
+            switch(domId) {
+                case 'job-list':
+                    menuReq("/hadoop/job/");
+                    break;
+                case 'hadoop-monitor':
+                    menuReq("/hadoop/monitor/");
+                    break;
+                case 'nlamonitor':
+                    menuReq("/nla/monitor/");
+                    break;
+                case 'nla-statistic':
+                    menuReq("/nla/statistic/");
+                    break;
+                case 'nla-area':
+                    menuReq("/nla/area/");
+                    break;
+                case 'nla-fc':
+                    menuReq("/nla/nlafc/");
+                    break;
+                case 'channel-nla':
+                    menuReq("/nla/channelnla/");
+                    break;
+                case 'nla-toplist':
+                    menuReq("/nla/nlatoplist/");
+                    break;
+                case 'channel-toplist':
+                    menuReq("/nla/channeltoplist/");
+                    break;
+                case 'fc-original':
+                    menuReq("/fc/fcoriginal/");
+                    break;
+                case 'daywarning':
+                    menuReq("/publisher/daywarning/");
+                    break;
+                case 'publishtotal':
+                    menuReq("/publisher/publishtotal/");
+                    break;
+                case 'publishdetail':
+                    menuReq("/publisher/publishdetail/");
+                    break;
+                case 'publishdelay':
+                    menuReq("/publisher/publishdelay/");
+                    break;
+                case 'publish-toplist':
+                    menuReq("/publisher/toplist/");
+                    break;
+                case 'lcblockmonitor':
+                    menuReq("/lcer/blockmonitor/");
+                    break;
+                case 'refresh-summary':
+                    menuReq("/refresh/summary/");
+                    break;
+                case 'refresh-detail':
+                    menuReq("/refresh/detail/");
+                    break;
+                case 'refresh-statistic':
+                    menuReq("/refresh/statistic/");
+                    break;
+            }
+        });
+    });
+
+    function menuReq(url) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(data) {
+                $("#contents").html(data);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,115 @@
+{% extends "hadoop/index.html" %}
+{% block content %}
+<div class="middle-div">
+    <div id="hadoop-namenode" class="drop-shadow curved curved-vt-2">
+        <div class="section left-section" style="width: 50%;">
+            <div class="sub-section" style="margin-top: 20px;">
+                <p class="value">{{ configuredcapacity }}</p>
+                <p class="title">Configured Capacity</p>
+            </div>
+            <div class="sub-section">
+                <p class="value">{{ presentcapacity }}</p>
+                <p class="title">Present Capacity</p>
+            </div>
+            <div class="sub-section">
+                <p class="value">{{ totaldatanode }}</p>
+                <p class="title">Total DataNode</p>
+            </div>
+            <div class="sub-section">
+                <p class="value">{{ deaddatanode }}</p>
+                <p class="title">Dead DataNode</p>
+            </div>
+        </div>
+
+        <div class="section right-section" style="width: 50%;">
+            <div class="sub-section" style="margin-top: 20px;">
+                <p class="value">{{ dfsremaining }}</p>
+                <p class="title">DFS Remaining</p>
+            </div>
+            <div class="sub-section">
+                <p class="value">{{ dfsused }}</p>
+                <p class="title">DFS Used</p>
+            </div>
+            <div class="sub-section">
+                <p class="value">{{ dfsusedper }}<span style="font-size: 16px; margin-left: 5px; color: #9eb197">%</span></p>
+                <p class="title">DFS Used Percent</p>
+            </div>
+            <div class="sub-section">
+                <p class="value" style="font-size: 20px;">{{ updatetime }}</p>
+                <p class="title">Last Update</p>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="bottom-div">
+    <div style="width: 86%; margin: 30px auto 0 auto;">
+        {% for name,ds,cc,dfsused,dfsusedper,dfsremaining,dfsremainingper,nondfsused,lastcontact in datanodes %}
+            <div class="hadoop-datanode">
+                <div class="hadoop-datanode-head">
+                    <div style="float: left;">
+                        <p class="value" style="line-height: 46px; font-size: 30px; margin: 0;"><a href="/hadoop/monitor/datanode/{{ name }}/performance/">{{ name }}</a></p>
+                    </div>
+                    <div style="float: right; margin-right: 5px;">
+                        <p class="value">{{ lastcontact }}</p>
+                        <p class="title">Last contact</p>
+                    </div>
+                    <div style="float: right; margin-right: 38px;">
+                        <p class="value">{{ ds }}</p>
+                        <p class="title">Decommission Status</p>
+                    </div>
+                </div>
+                <div class="split"></div>
+                <div class="hadoop-datanode-body">
+                    <div>
+                        <p class="value">{{ cc }}</p>
+                        <p class="title">Configured Capacity</p>
+                    </div>
+                    <div>
+                        <p class="value">{{ dfsused }}</p>
+                        <p class="title">DFS Used</p>
+                    </div>
+                    <div>
+                        <p class="value">{{ dfsusedper }}<span style="font-size: 13px; margin-left: 5px; color: #4f6164">%</span></p>
+                        <p class="title">DFS Used Percent</p>
+                    </div>
+                    <div>
+                        <p class="value">{{ dfsremaining }}</p>
+                        <p class="title">DFS Remaining</p>
+                    </div>
+                    <div>
+                        <p class="value">{{ dfsremainingper }}<span style="font-size: 13px; margin-left: 5px; color: #4f6164">%</span></p>
+                        <p class="title">DFSR Percent</p>
+                    </div>
+                    <div>
+                        <p class="value">{{ nondfsused }}</p>
+                        <p class="title">Non DFS Used</p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('div.hadoop-datanode-head p a').fancybox({
+        'width': "900",
+        'height': "600",
+        'autoScale': true,
+        'centerOnScroll': true,
+        'padding': 28,
+        'margin': 48,
+        'scrolling': 'no',
+        'overlayOpacity': 0.4,
+        'overlayColor': "#979b8f",
+        'transitionIn': "elastic",
+        'transitionOut': "elastic",
+        'enableEscapeButton': true
+    });
+})
+</script>
+{% endblock %}

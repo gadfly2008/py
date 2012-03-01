@@ -1,0 +1,44 @@
+{% extends "nla/index.html" %}
+{% block content %}
+<div class="top-div">
+    <div class="search-box">
+        <div class="search">
+            <input type="text" id="beginDate" class="datepicker" value="{{ beginDate }}" readonly="true" name="beginDate"/>
+        </div>
+        <div class="search submit">
+            <input type="image" src="/static/images/btn_submit.png" id="submit"/>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="middle-div">
+    <div id="charts">
+        <div id="chart-top-channel"></div>
+        <script type="text/javascript">
+            FusionCharts._fallbackJSChartWhenNoFlash();
+            var chart = new FusionCharts("/static/swf/MSBar2D.swf",
+            "ctc", "100%", "1480", "0", "1");
+            var url = "/nla/channeltoplist/fileline/data/";
+            url += "?beginDate={{ beginDate }}";
+            chart.setJSONUrl(url);
+            chart.render("chart-top-channel");
+        </script>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+    $('#submit').click(function() {
+        var day = $('#beginDate').val();
+
+        FusionCharts._fallbackJSChartWhenNoFlash();
+        var ctc = FusionCharts("ctc");
+        var url1 = "/nla/channeltoplist/fileline/data/";
+        url1 += "?beginDate="+day;
+        ctc.setJSONUrl(url1);
+    });
+})
+</script>
+{% endblock %}

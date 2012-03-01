@@ -1,0 +1,20 @@
+<uwsgi>
+    <socket>127.0.0.1:9090</socket>
+    <pythonpath>/Application</pythonpath>
+    <socket-timeout>180</socket-timeout>
+    <master/>
+    <listen>204800</listen>
+    <processes>64</processes>
+    <harakiri>90</harakiri>
+    <enable-threads/>
+    <post-buffering>131072</post-buffering>
+    <post-buffering-bufsize>131072</post-buffering-bufsize>
+    <max-requests>204800</max-requests>
+    <buffer-size>65536</buffer-size>
+    <module>filedownload_wsgi</module>
+    <threads>64</threads>
+    <limit-as>1024</limit-as>
+    <limit-post>131072</limit-post>
+    <daemonize>/Application/filedownload/logs/uwsgi.log</daemonize>
+    <pidfile>/tmp/filedownload.pid</pidfile>
+</uwsgi>

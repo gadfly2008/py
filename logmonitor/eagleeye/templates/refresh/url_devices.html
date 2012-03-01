@@ -1,0 +1,57 @@
+<div id="container" style="width: 768px;">
+    <input type="hidden" name="urlId" id="urlId" value="{{ urlId }}">
+    <div class="middle-div">
+        <div id='summary' class='drop-shadow curved curved-vt-2'>
+            <div style="width: 50%;">
+                <p class='title'>刷新设备数</p>
+                <p class='value'>{{ total_devices }}</p>
+            </div>
+            <div style="width: 50%;">
+                <p class='title'>没有处理的设备数</p>
+                <p class='value'>{{ unprocess_devices }}</p>
+            </div>
+        </div>
+        <div class='clear'></div>
+        <div class='div-table' id="table-devices">
+             <div class='div-head'>
+                <div class='div-th' style='width: 30%; cursor: pointer;' id="hostname">设备名字</div>
+                <div class='div-th' style='width: 15%; cursor: pointer;' id="status">状态</div>
+                <div class='div-th' style='width: 10%; cursor: pointer;' id="code">Code</div>
+                <div class='div-th' style='width: 30%'>IP</div>
+                 <div class='div-th' style='width: 15%; cursor: pointer;' id="isfirstlayer">是否上层</div>
+                <div class='clear'></div>
+             </div>
+            {% for hostname, status, code, ip, isFistLayer in devices %}
+                <div class='div-tr level0' id='tr0'>
+                    <div class='div-td' style='width: 30%'>{{ hostname }}</div>
+                    <div class='div-td' style='width: 15%'>{{ status }}</div>
+                    <div class='div-td' style='width: 10%'>{{ code }}</div>
+                    <div class='div-td' style='width: 30%'>{{ ip }}</div>
+                    <div class='div-td' style='width: 15%'>{{ isFistLayer }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('div.div-th').click(function() {
+        $('#table-devices div.div-tr').remove();
+        $.getJSON("/refresh/detail/url/devices/sort/",
+            {"sortType": $(this).attr("id"), "urlId": $('input#urlId').val()},
+            function(data) {
+                var table = "";
+                $.each(data["data"], function(index, entry) {
+                    table += "<div class='div-tr level0' id='tr"+index+"'>";
+                    table += "<div class='div-td' style='width: 30%'>"+entry["name"]+"</div>";
+                    table += "<div class='div-td' style='width: 15%'>"+entry["status"]+"</div>";
+                    table += "<div class='div-td' style='width: 10%'>"+entry["code"]+"</div>";
+                    table += "<div class='div-td' style='width: 30%'>"+entry["ip"]+"</div>";
+                    table += "<div class='div-td' style='width: 15%'>"+entry["firstLayer"]+"</div>";
+                    table += "<div class='clear'></div>";
+                    table += "</div>";
+                });
+                $('#table-devices div.div-head').after(table);
+            }
+        );
+    });
+</script>

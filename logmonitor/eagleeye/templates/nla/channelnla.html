@@ -1,0 +1,34 @@
+<div id="container">
+    <div class="middle-div">
+        <div id='summary' class='drop-shadow curved curved-vt-2'>
+            <div style="width: 15%;">
+                <p class='title'>NLA设备</p>
+                <p class='value'>{{ nlacount }}</p>
+            </div>
+            <div style="width: 55%;">
+                <p class='title'>日志文件行数</p>
+                <p class='value'>{{ size }}</p>
+            </div>
+            <div style="width: 15%;">
+                <p class='title'>产生文件数量</p>
+                <p class='value'>{{ output_count }}</p>
+            </div>
+            <div style="width: 15%;">
+                <p class='title'>上传文件数量</p>
+                <p class='value'>{{ upload_count }}</p>
+            </div>
+        </div>
+        <div class='clear'></div>
+        <div id="charts">
+            <div id="chart-channel-nla"></div>
+            <script type="text/javascript">
+                FusionCharts._fallbackJSChartWhenNoFlash();
+                var chart = new FusionCharts("/static/swf/ScrollCombiDY2D.swf",
+                "ccn", "100%", "360", "0", "1");
+                var url = "/nla/channelnla/{{ channelId }}/data/?beginDate={{ beginDate }}";
+                chart.setJSONUrl(url);
+                chart.render("chart-channel-nla");
+            </script>
+        </div>
+    </div>
+</div>
