@@ -1,6 +1,0 @@
-BGP-BJ-2-5A1 223.202.17.198 22 root Blueit_s_BJ
-BGP-BJ-2-5A2 223.202.17.199 22 root Blueit_s_BJ
-BGP-BJ-2-5A3 223.202.17.200 22 root Blueit_s_BJ
-BGP-BJ-2-5A4 223.202.17.201 22 root Blueit_s_BJ
-BGP-BJ-2-5A5 223.202.17.202 22 root Blueit_s_BJ
-BGP-BJ-2-5C1 223.202.17.203 22 root Blueit_s_BJ

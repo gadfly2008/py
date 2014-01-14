@@ -1,7 +1,0 @@
-CNC-JN-R-542 119.188.7.66 22 root hdp@log_0909
-CNC-JN-R-5A1 119.188.7.70 22 root hdp@log_0909
-CNC-JN-R-545 119.188.7.69 22 root hdp@log_0909
-CNC-JN-R-5A4 119.188.7.73 22 root hdp@log_0909
-CNC-JN-R-544 119.188.7.68 22 root hdp@log_0909
-CNC-JN-R-5A5 119.188.7.74 22 root hdp@log_0909
-CNC-JN-R-5A3 119.188.7.72 22 root hdp@log_0909
